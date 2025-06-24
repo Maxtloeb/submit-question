@@ -6,64 +6,119 @@
   <style>
     body {
       font-family: Arial, sans-serif;
-      max-width: 600px;
-      margin: 2rem auto;
-      padding: 1.5rem;
-      background: #f9f9f9;
+      background-color: #f0f4f8;
       color: #003366;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      max-width: 600px;
+      margin: auto;
+      padding: 2rem;
     }
 
     h1 {
-      color: #003366;
       text-align: center;
     }
 
     label {
-      display: block;
-      margin-top: 1rem;
       font-weight: bold;
+      margin-top: 1rem;
+      display: block;
     }
 
-    input, textarea, select {
+    input, select, textarea {
       width: 100%;
       padding: 0.5rem;
-      margin-top: 0.25rem;
+      margin-bottom: 1rem;
       border: 1px solid #ccc;
       border-radius: 4px;
     }
 
     button {
-      margin-top: 1.5rem;
-      padding: 0.75rem;
       background-color: #007acc;
       color: white;
+      padding: 0.75rem;
       border: none;
       border-radius: 5px;
-      font-size: 1rem;
       cursor: pointer;
+      font-size: 1rem;
     }
 
     button:hover {
       background-color: #005fa3;
     }
-
-    .success {
-      margin-top: 1rem;
-      color: green;
-      font-weight: bold;
-      text-align: center;
-    }
   </style>
 </head>
 <body>
   <h1>Submit a Trivia Question</h1>
-  <form id="triviaForm">
-    <label for="question">Question</label>
-    <textarea id="question" name="question" required></textarea>
+  <form id="questionForm">
+    <label>Question</label>
+    <textarea name="question" required></textarea>
 
-    <label for="correctAnswer">Correct Answer</label>
-    <input type="text" id="correctAnswer" name="correctAnswer" required>
+    <label>Correct Answer</label>
+    <input type="text" name="correct" required>
 
-    <label for="codeRef">Code Reference (e.g. ACI 318)</labe
+    <label>Incorrect Answer 1</label>
+    <input type="text" name="wrong1">
+
+    <label>Incorrect Answer 2</label>
+    <input type="text" name="wrong2">
+
+    <label>Incorrect Answer 3</label>
+    <input type="text" name="wrong3">
+
+    <label>Code Reference</label>
+    <input type="text" name="codeRef">
+
+    <label>Difficulty</label>
+    <select name="difficulty">
+      <option value="Easy">Easy</option>
+      <option value="Medium">Medium</option>
+      <option value="Challenging">Challenging</option>
+    </select>
+
+    <label>Code Book</label>
+    <select name="codebook">
+      <option value="ACI 318">ACI 318</option>
+      <option value="ASCE 7">ASCE 7</option>
+      <option value="TMS 402">TMS 402</option>
+    </select>
+
+    <button type="submit">Submit Question</button>
+  </form>
+
+  <div id="response" style="margin-top: 1rem; font-weight: bold;"></div>
+
+  <script>
+    const form = document.getElementById("questionForm");
+    const responseBox = document.getElementById("response");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const data = new FormData(form);
+      const payload = {
+        question: data.get("question"),
+        correct: data.get("correct"),
+        wrong1: data.get("wrong1"),
+        wrong2: data.get("wrong2"),
+        wrong3: data.get("wrong3"),
+        codeRef: data.get("codeRef"),
+        difficulty: data.get("difficulty"),
+        codebook: data.get("codebook")
+      };
+
+      try {
+        const res = await fetch("https://script.google.com/macros/s/AKfycbzvU6MHnpCNus_53HbtmfYCZFhBp5rATmFIE-Pb6WBjE8EGo26VxNmEjxKcJ6Ccp89A/exec", {
+          method: "POST",
+          body: JSON.stringify({ type: "submitQuestion", ...payload }),
+        });
+
+        const result = await res.text();
+        responseBox.innerText = "✅ Question submitted!";
+        form.reset();
+      } catch (err) {
+        console.error(err);
+        responseBox.innerText = "❌ Submission failed.";
+      }
+    });
+  </script>
+</body>
+</html>
