@@ -2,225 +2,507 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Submit a Trivia Question</title>
   <style>
-  html {
-    box-sizing: border-box;
-    font-size: 16px;
-  }
-
-  *, *:before, *:after {
-    box-sizing: inherit;
-  }
-
-  body {
-    font-family: 'Segoe UI', Roboto, sans-serif;
-    background: radial-gradient(circle at top, #f0f4f8, #dbe9f4);
-    color: #002b45;
-    margin: 0;
-    padding: 1.5rem;
-    max-width: 100%;
-  }
-
-  h1 {
-    text-align: center;
-    font-size: 2rem;
-    color: #003366;
-    margin-bottom: 1.2rem;
-  }
-
-  .filters {
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-    margin-bottom: 1.5rem;
-  }
-
-  @media (min-width: 600px) {
-    .filters {
-      flex-direction: row;
+    html {
+      box-sizing: border-box;
+      font-size: 16px;
     }
-  }
 
-  select {
-    padding: 0.6rem;
-    font-size: 1rem;
-    border-radius: 8px;
-    border: 1px solid #bbb;
-    background-color: #fefefe;
-    color: #002b45;
-    width: 100%;
-  }
+    *, *:before, *:after {
+      box-sizing: inherit;
+    }
 
-  .question-box {
-    background: white;
-    border: 2px solid #007acc;
-    border-radius: 16px;
-    padding: 1.5rem;
-    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
-    margin-bottom: 1.5rem;
-    transition: transform 0.2s ease;
-  }
+    body {
+      font-family: 'Segoe UI', Roboto, sans-serif;
+      background: radial-gradient(circle at top, #f0f4f8, #dbe9f4);
+      color: #002b45;
+      margin: 0;
+      padding: 1.5rem;
+      max-width: 100%;
+    }
 
-  .question-box:hover {
-    transform: scale(1.01);
-  }
+    h1 {
+      text-align: center;
+      font-size: 2rem;
+      color: #003366;
+      margin-bottom: 1.2rem;
+    }
 
-  .code-ref {
-    margin-top: 1rem;
-    font-size: 0.9rem;
-    color: #666;
-  }
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
 
-  button.answer {
-    display: block;
-    width: 100%;
-    padding: 0.85rem;
-    margin: 0.5rem 0;
-    background-color: #007acc;
-    color: white;
-    border: none;
-    border-radius: 10px;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: background 0.3s ease;
-  }
+    .form-section {
+      background: white;
+      border: 2px solid #007acc;
+      border-radius: 16px;
+      padding: 2rem;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+      margin-bottom: 2rem;
+    }
 
-  button.answer:hover {
-    background-color: #005fa3;
-  }
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
 
-  #score {
-    font-weight: bold;
-    text-align: center;
-    margin-bottom: 2rem;
-    font-size: 1.1rem;
-    color: #003366;
-  }
+    label {
+      display: block;
+      font-weight: 600;
+      color: #003366;
+      margin-bottom: 0.5rem;
+      font-size: 1rem;
+    }
 
-  #adminButton {
-    font-size: 0.9rem;
-    text-align: center;
-    color: #666;
-    margin-top: 2rem;
-    cursor: pointer;
-    background: none;
-    border: none;
-    text-decoration: underline;
-  }
+    .required {
+      color: #dc3545;
+    }
 
-  #adminButton:hover {
-    color: #003366;
-  }
+    input[type="text"], textarea, select {
+      width: 100%;
+      padding: 0.75rem;
+      font-size: 1rem;
+      border: 2px solid #ddd;
+      border-radius: 8px;
+      background-color: #fefefe;
+      color: #002b45;
+      transition: border-color 0.3s ease;
+    }
 
-  .admin-panel {
-    background: #fff9e6;
-    border: 1px solid #f9d06c;
-    border-radius: 10px;
-    padding: 1rem;
-    margin-top: 2rem;
-  }
+    input[type="text"]:focus, textarea:focus, select:focus {
+      outline: none;
+      border-color: #007acc;
+      box-shadow: 0 0 0 3px rgba(0, 122, 204, 0.1);
+    }
 
-  .approve-btn, .reject-btn {
-    font-size: 0.85rem;
-    margin-left: 0.5rem;
-    padding: 0.4rem 0.7rem;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-  }
+    textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
 
-  .approve-btn {
-    background-color: #28a745;
-    color: white;
-  }
+    .answers-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
 
-  .reject-btn {
-    background-color: #dc3545;
-    color: white;
-  }
+    @media (min-width: 600px) {
+      .answers-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
 
-  /* Form Enhan*
+    .answer-group {
+      position: relative;
+    }
 
+    .correct-answer {
+      border-color: #28a745 !important;
+      background-color: #f8fff9;
+    }
 
+    .submit-btn {
+      width: 100%;
+      padding: 1rem;
+      background: #28a745;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .submit-btn:hover {
+      background: #218838;
+      transform: translateY(-1px);
+    }
+
+    .submit-btn:disabled {
+      background: #6c757d;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    #response {
+      margin-top: 1rem;
+      padding: 1rem;
+      border-radius: 8px;
+      font-weight: bold;
+      text-align: center;
+      display: none;
+    }
+
+    .success {
+      background: #d4edda;
+      border: 1px solid #c3e6cb;
+      color: #155724;
+    }
+
+    .error {
+      background: #f8d7da;
+      border: 1px solid #f5c6cb;
+      color: #721c24;
+    }
+
+    .info-box {
+      background: #e8f4f8;
+      border: 1px solid #007acc;
+      padding: 1rem;
+      border-radius: 8px;
+      margin-bottom: 2rem;
+      font-size: 0.9rem;
+    }
+
+    .info-box h3 {
+      margin-top: 0;
+      color: #003366;
+    }
+
+    .admin-section {
+      background: #fff9e6;
+      border: 2px solid #f9d06c;
+      border-radius: 16px;
+      padding: 2rem;
+      margin-top: 2rem;
+    }
+
+    .admin-toggle {
+      background: none;
+      border: none;
+      color: #666;
+      text-decoration: underline;
+      cursor: pointer;
+      font-size: 0.9rem;
+      margin-bottom: 1rem;
+    }
+
+    .admin-toggle:hover {
+      color: #003366;
+    }
+
+    .pending-question {
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .admin-buttons {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+
+    .approve-btn, .reject-btn {
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+
+    .approve-btn {
+      background-color: #28a745;
+      color: white;
+    }
+
+    .reject-btn {
+      background-color: #dc3545;
+      color: white;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .loading {
+      text-align: center;
+      color: #666;
+      font-style: italic;
+    }
+  </style>
 </head>
 <body>
-  <h1>Submit a Trivia Question</h1>
-  <form id="questionForm">
-    <label>Question</label>
-    <textarea name="question" required></textarea>
+  <div class="container">
+    <h1>🏗️ Submit a Trivia Question</h1>
+    
+    <div class="info-box">
+      <h3>Submission Guidelines</h3>
+      <ul>
+        <li>All questions will be reviewed before appearing in the trivia game</li>
+        <li>Please provide clear, accurate questions with one correct answer</li>
+        <li>Include code references when applicable</li>
+        <li>Ensure incorrect answers are plausible but clearly wrong</li>
+      </ul>
+    </div>
 
-    <label>Correct Answer</label>
-    <input type="text" name="correct" required>
+    <div class="form-section">
+      <form id="questionForm">
+        <div class="form-group">
+          <label for="question">Question <span class="required">*</span></label>
+          <textarea name="question" id="question" required placeholder="Enter your trivia question here..."></textarea>
+        </div>
 
-    <label>Incorrect Answer 1</label>
-    <input type="text" name="wrong1">
+        <div class="form-group">
+          <label>Answers</label>
+          <div class="answers-grid">
+            <div class="answer-group">
+              <label for="correct">Correct Answer <span class="required">*</span></label>
+              <input type="text" name="correct" id="correct" class="correct-answer" required placeholder="The correct answer">
+            </div>
+            <div class="answer-group">
+              <label for="incorrect1">Incorrect Answer 1</label>
+              <input type="text" name="incorrect1" id="incorrect1" placeholder="First incorrect option">
+            </div>
+            <div class="answer-group">
+              <label for="incorrect2">Incorrect Answer 2</label>
+              <input type="text" name="incorrect2" id="incorrect2" placeholder="Second incorrect option">
+            </div>
+            <div class="answer-group">
+              <label for="incorrect3">Incorrect Answer 3</label>
+              <input type="text" name="incorrect3" id="incorrect3" placeholder="Third incorrect option">
+            </div>
+          </div>
+        </div>
 
-    <label>Incorrect Answer 2</label>
-    <input type="text" name="wrong2">
+        <div class="form-group">
+          <label for="codeRef">Code Reference</label>
+          <input type="text" name="codeRef" id="codeRef" placeholder="e.g., Section 9.3.2.1, Table 12.2-1">
+        </div>
 
-    <label>Incorrect Answer 3</label>
-    <input type="text" name="wrong3">
+        <div class="form-group">
+          <label for="difficulty">Difficulty <span class="required">*</span></label>
+          <select name="difficulty" id="difficulty" required>
+            <option value="">Select difficulty...</option>
+            <option value="Easy">Easy</option>
+            <option value="Medium">Medium</option>
+            <option value="Challenging">Challenging</option>
+          </select>
+        </div>
 
-    <label>Code Reference</label>
-    <input type="text" name="codeRef">
+        <div class="form-group">
+          <label for="codebook">Code Book <span class="required">*</span></label>
+          <select name="codebook" id="codebook" required>
+            <option value="">Select code book...</option>
+            <option value="ACI 318">ACI 318</option>
+            <option value="ASCE 7">ASCE 7</option>
+            <option value="TMS 402">TMS 402</option>
+            <option value="AISC">AISC</option>
+            <option value="NDS">NDS</option>
+            <option value="IBC">IBC</option>
+            <option value="OSHA">OSHA</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
 
-    <label>Difficulty</label>
-    <select name="difficulty">
-      <option value="Easy">Easy</option>
-      <option value="Medium">Medium</option>
-      <option value="Challenging">Challenging</option>
-    </select>
+        <button type="submit" class="submit-btn" id="submitBtn">Submit Question for Review</button>
+      </form>
 
-  <label>Code Book</label>
-  <select name="codebook">
-    <option value="ACI 318">ACI 318</option>
-    <option value="ASCE 7">ASCE 7</option>
-    <option value="TMS 402">TMS 402</option>
-    <option value="AISC">AISC</option>
-    <option value="NDS">NDS</option>
-    <option value="IBC">IBC</option>
-    <option value="Other">OSHA</option>
-  </select>
+      <div id="response"></div>
+    </div>
 
-    <button type="submit">Submit Question</button>
-  </form>
-
-  <div id="response" style="margin-top: 1rem; font-weight: bold;"></div>
+    <!-- Admin Section -->
+    <div class="admin-section">
+      <button class="admin-toggle" onclick="toggleAdminPanel()">Admin: Review Pending Questions</button>
+      <div id="adminPanel" class="hidden">
+        <h3>Pending Questions</h3>
+        <div id="pendingQuestions" class="loading">Loading pending questions...</div>
+      </div>
+    </div>
+  </div>
 
   <script>
+    // REPLACE THIS URL WITH YOUR GOOGLE APPS SCRIPT URL
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzvU6MHnpCNus_53HbtmfYCZFhBp5rATmFIE-Pb6WBjE8EGo26VxNmEjxKcJ6Ccp89A/exec";
+    
     const form = document.getElementById("questionForm");
     const responseBox = document.getElementById("response");
+    const submitBtn = document.getElementById("submitBtn");
 
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
-
-      const data = new FormData(form);
+      
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Submitting...";
+      
+      const formData = new FormData(form);
       const payload = {
-        question: data.get("question"),
-        correct: data.get("correct"),
-        wrong1: data.get("wrong1"),
-        wrong2: data.get("wrong2"),
-        wrong3: data.get("wrong3"),
-        codeRef: data.get("codeRef"),
-        difficulty: data.get("difficulty"),
-        codebook: data.get("codebook")
+        type: "submitQuestion",
+        question: formData.get("question"),
+        correct: formData.get("correct"),
+        incorrect1: formData.get("incorrect1"),
+        incorrect2: formData.get("incorrect2"),
+        incorrect3: formData.get("incorrect3"),
+        codeRef: formData.get("codeRef"),
+        difficulty: formData.get("difficulty"),
+        codebook: formData.get("codebook"),
+        approved: "no", // Default to not approved
+        status: "pending",
+        submittedDate: new Date().toISOString()
       };
 
       try {
-        const res = await fetch("https://script.google.com/macros/s/AKfycbzvU6MHnpCNus_53HbtmfYCZFhBp5rATmFIE-Pb6WBjE8EGo26VxNmEjxKcJ6Ccp89A/exec", {
+        const res = await fetch(SCRIPT_URL, {
           method: "POST",
-          body: JSON.stringify({ type: "submitQuestion", ...payload }),
+          mode: "cors",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(payload)
         });
 
+        if (!res.ok) {
+          throw new Error(`HTTP error! status: ${res.status}`);
+        }
+
         const result = await res.text();
-        responseBox.innerText = "✅ Question submitted!";
+        showResponse("✅ Question submitted successfully! It will be reviewed before appearing in the trivia game.", "success");
         form.reset();
+        
       } catch (err) {
-        console.error(err);
-        responseBox.innerText = "❌ Submission failed.";
+        console.error("Submission error:", err);
+        showResponse("❌ Submission failed. Please try again or contact support.", "error");
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Submit Question for Review";
       }
     });
+
+    function showResponse(message, type) {
+      responseBox.textContent = message;
+      responseBox.className = type;
+      responseBox.style.display = "block";
+      
+      // Auto-hide after 5 seconds for success messages
+      if (type === "success") {
+        setTimeout(() => {
+          responseBox.style.display = "none";
+        }, 5000);
+      }
+    }
+
+    // Admin functions
+    let adminPanelVisible = false;
+
+    function toggleAdminPanel() {
+      adminPanelVisible = !adminPanelVisible;
+      const panel = document.getElementById("adminPanel");
+      
+      if (adminPanelVisible) {
+        panel.classList.remove("hidden");
+        loadPendingQuestions();
+      } else {
+        panel.classList.add("hidden");
+      }
+    }
+
+    async function loadPendingQuestions() {
+      const container = document.getElementById("pendingQuestions");
+      container.innerHTML = '<div class="loading">Loading pending questions...</div>';
+      
+      try {
+        const res = await fetch(`${SCRIPT_URL}?type=getPendingQuestions`);
+        const questions = await res.json();
+        
+        if (questions.length === 0) {
+          container.innerHTML = '<p>No pending questions to review.</p>';
+          return;
+        }
+        
+        container.innerHTML = questions.map(q => `
+          <div class="pending-question" data-id="${q.id || q.rowIndex}">
+            <h4>Question: ${q.question}</h4>
+            <p><strong>Correct Answer:</strong> ${q.correct}</p>
+            <p><strong>Incorrect Answers:</strong> ${[q.incorrect1, q.incorrect2, q.incorrect3].filter(a => a).join(', ')}</p>
+            <p><strong>Code Book:</strong> ${q.codebook}</p>
+            <p><strong>Code Reference:</strong> ${q.codeRef || 'N/A'}</p>
+            <p><strong>Difficulty:</strong> ${q.difficulty}</p>
+            <p><strong>Submitted:</strong> ${q.submittedDate ? new Date(q.submittedDate).toLocaleDateString() : 'Unknown'}</p>
+            <div class="admin-buttons">
+              <button class="approve-btn" onclick="approveQuestion('${q.id || q.rowIndex}')">Approve</button>
+              <button class="reject-btn" onclick="rejectQuestion('${q.id || q.rowIndex}')">Reject</button>
+            </div>
+          </div>
+        `).join('');
+        
+      } catch (err) {
+        console.error("Error loading pending questions:", err);
+        container.innerHTML = '<div class="error">Error loading pending questions.</div>';
+      }
+    }
+
+    async function approveQuestion(questionId) {
+      try {
+        const res = await fetch(SCRIPT_URL, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            type: "approveQuestion",
+            questionId: questionId
+          })
+        });
+        
+        if (res.ok) {
+          // Remove the question from the pending list
+          const questionElement = document.querySelector(`[data-id="${questionId}"]`);
+          if (questionElement) {
+            questionElement.remove();
+          }
+          
+          // Check if there are any pending questions left
+          const remainingQuestions = document.querySelectorAll('.pending-question');
+          if (remainingQuestions.length === 0) {
+            document.getElementById("pendingQuestions").innerHTML = '<p>No pending questions to review.</p>';
+          }
+        }
+      } catch (err) {
+        console.error("Error approving question:", err);
+        alert("Error approving question. Please try again.");
+      }
+    }
+
+    async function rejectQuestion(questionId) {
+      if (!confirm("Are you sure you want to reject this question?")) {
+        return;
+      }
+      
+      try {
+        const res = await fetch(SCRIPT_URL, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            type: "rejectQuestion",
+            questionId: questionId
+          })
+        });
+        
+        if (res.ok) {
+          // Remove the question from the pending list
+          const questionElement = document.querySelector(`[data-id="${questionId}"]`);
+          if (questionElement) {
+            questionElement.remove();
+          }
+          
+          // Check if there are any pending questions left
+          const remainingQuestions = document.querySelectorAll('.pending-question');
+          if (remainingQuestions.length === 0) {
+            document.getElementById("pendingQuestions").innerHTML = '<p>No pending questions to review.</p>';
+          }
+        }
+      } catch (err) {
+        console.error("Error rejecting question:", err);
+        alert("Error rejecting question. Please try again.");
+      }
+    }
   </script>
 </body>
 </html>
